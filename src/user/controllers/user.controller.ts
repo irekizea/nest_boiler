@@ -8,12 +8,14 @@ import {
     ApiUnauthorizedResponse,
     ApiOperation,
   } from '@nestjs/swagger';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('user')
 export class UserController {
 
     constructor (
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly authSErvice: AuthService,
     ){}
     
     @ApiOperation({ summary : '이메일 중복 체크'})

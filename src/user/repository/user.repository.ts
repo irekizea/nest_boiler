@@ -17,9 +17,17 @@ export class UserRepository {
             throw new HttpException('DB Error', 400);
         }
     }
-
+    
     //회원 가입
     async signUpUser (user: UserSignUpRequestDto): Promise<User>{
         return await this.userModel.create(user);
     }
+
+    // email 로 유저 찾기
+    async findUserByEmail(userEmail: string) {
+        const user = await this.userModel.findOne({ userEmail });
+        return user;
+    }
+
+
 }

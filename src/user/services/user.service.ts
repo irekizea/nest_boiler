@@ -1,9 +1,6 @@
 import { UserRepository } from './../repository/user.repository';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
-import { Model } from 'mongoose';
-import { User } from '../schemas/user.shcema';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -12,9 +9,7 @@ export class UserService {
 
     // 이메일 중복 체크
     async emailCheck(userEmail: string) {
-        console.log(userEmail)
         const isEmailExist = await this.userRepository.existByEmail(userEmail);
-        console.log(isEmailExist);
 
         if(isEmailExist){
             throw new UnauthorizedException('해당 이메일은 이미 사용중 입니다');
@@ -47,8 +42,6 @@ export class UserService {
             smsAllow,
             emailAllow
         });
-
         return user.readOnlyData;
-
     }
 }
