@@ -3,6 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginRequestDto } from './dto/loginrequest.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserBasicInfoDto } from 'src/user/dto/userBasicInfo.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
         private jwtService: JwtService,
         ){}
 
-    async login(data: LoginRequestDto){
+    async jwtLogin(data: LoginRequestDto){
 
         const { userEmail, password } = data;
 
@@ -29,12 +30,41 @@ export class AuthService {
         if (!isPasswordValidated) {
             throw new UnauthorizedException('로그인 정보를 확인해 주세요');
         }
-        const payload = { userEmail : userEmail};
+        const payload:JSON = <JSON><unknown>{
+             userEmail : userEmail,
+            };
 
+        const refreshToken = user.refreshToken?user.refreshToken:await this.setNewRefreshToken(payload)
         return {
-            token: this.jwtService.sign(payload),
+            userBasicInfo: user.basicInfoData,
+            accessToken: await this.setNewAccessToken(payload),
+            refreshToken: refreshToken
         }
 
     }
+
+    async setNewAccessToken(payload: JSON){
+        const accessToken =  this.jwtService.sign(payload, {
+            secret: process.env.JWT_SECRET,
+            expiresIn: process.env.JWT_ACCESS_EXP
+        })
+
+        await this.userRepository.updateAccessToken(payload["userEmail"], accessToken);
+
+        return accessToken;
+    }
+
+    async setNewRefreshToken(payload: JSON){
+        const refreshToken = this.jwtService.sign(payload, {
+            secret: process.env.JWT_REFRESH_SECRET,
+            expiresIn: process.env.JWT_REFRESH_EXP
+        })
+
+        await this.userRepository.updateRefreshToken(payload["userEmail"], refreshToken);
+
+        return refreshToken;
+    }
+
+    
 
 }

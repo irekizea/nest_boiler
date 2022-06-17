@@ -1,7 +1,10 @@
+import { User } from 'src/user/schemas/user.shcema';
 import { UserRepository } from './../repository/user.repository';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
 import * as bcrypt from 'bcrypt';
+import { RegistSellerDto } from '../dto/registSeller.dto';
+import { UserEmailCheckDto } from '../dto/userEmailCheck.dto';
 
 @Injectable()
 export class UserService {
@@ -43,5 +46,16 @@ export class UserService {
             emailAllow
         });
         return user.readOnlyData;
+    }
+
+    //셀러 등록
+    async registSeller(registSellerDto: RegistSellerDto) {
+        await this.userRepository.registSeller(registSellerDto)
+    }
+
+    //셀러 정보 확인
+    async getSellerInfo(userEmail: string) {
+        const sellerInfo = this.userRepository.getSellerInfoByEmail(userEmail);
+        return sellerInfo 
     }
 }
