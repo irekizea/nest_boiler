@@ -2,7 +2,7 @@ import { UserSignUpRequestDto } from './../dto/userSignUpRequest.dto';
 import { Injectable, HttpException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { User } from "../schemas/user.shcema";
+import { User } from "../schemas/user.schema";
 import { RegistSellerDto } from '../dto/registSeller.dto';
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { User } from 'src/user/schemas/user.shcema';
+import { User } from 'src/user/schemas/user.schema';
 import { UserRepository } from './../repository/user.repository';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
@@ -58,4 +58,6 @@ export class UserService {
         const sellerInfo = this.userRepository.getSellerInfoByEmail(userEmail);
         return sellerInfo 
     }
+
+
 }

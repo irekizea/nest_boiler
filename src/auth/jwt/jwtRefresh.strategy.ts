@@ -1,7 +1,8 @@
-import { AuthService } from 'src/auth/auth.service';
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
+import { Payload } from './jwt.payload';
+import { UserRepository } from 'src/user/repository/user.repository';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -9,7 +10,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor(
-    private readonly authService: AuthService,
+    private readonly userRepository: UserRepository
   ) {
     super({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -18,11 +19,13 @@ export class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req, payload: any) {
-    console.log('check')
-    console.log(req)
-    // const payload = { uid: uid,  nickname: nickname, subscribeStatus: subscribeStatus, purchaseDate: purchaseDate, expiresDate:expiresDate };
-    const refreshToken = req.cookies?.Refresh;
-    return true;
+  async validate(payload: Payload) {
+    const user = await this.userRepository.findUserByEmail(payload.userEmail);
+        
+    if(user){ 
+        return user.accessToken;
+    }else{
+        throw new UnauthorizedException();
+    }
   }
 }

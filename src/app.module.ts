@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { ProductModule } from './product/product.module';
 import mongoose from 'mongoose';
 
 @Module({
@@ -18,7 +19,7 @@ import mongoose from 'mongoose';
     useUnifiedTopology: true,
     // userCreateIndex: true,
     // useFindAndModify: false,
-  }), AuthModule,],
+  }), AuthModule, ProductModule,],
   controllers: [AppController],
   providers: [AppService],
 })
