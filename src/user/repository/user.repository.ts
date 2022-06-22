@@ -51,25 +51,6 @@ export class UserRepository {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     async updateAccessToken(userEmail: string, accessToken: string){
         await this.userModel.updateOne({userEmail}, {accessToken: accessToken});
     }

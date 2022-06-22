@@ -1,24 +1,22 @@
-import { Prop, Schema, SchemaOptions, } from '@nestjs/mongoose';
+import { MongooseModule, Prop, Schema, SchemaFactory, SchemaOptions, } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { 
   IsEmail, 
   IsNotEmpty, 
   IsNumber, 
   IsString, 
-  IsBoolean, 
-  IsArray,
   IsJSON
 } from 'class-validator';
 import { Document, Types } from 'mongoose';
 
-export type UserDocument = User & Document;
+export type ProductDocument = Product & Document;
 
 const options: SchemaOptions =  {
   timestamps: true,
 }
 
 @Schema(options)
-export class User {
+export class Product {
 
   @ApiProperty({
     example: 'jklsdlf23slsdf',
@@ -63,7 +61,8 @@ export class User {
   })
   @Prop()
   @IsNotEmpty()
-  category: number;
+  @IsString()
+  category: string;
 
   @ApiProperty({
     example: '과자/스낵바',
@@ -144,15 +143,15 @@ export class User {
   })
   @Prop()
   @IsString()
-  deliveryMethod: [];
+  deliveryType: [];
 
   @ApiProperty({
     example: '{"deliveryOption":"택배 선불", "deliveryPrice": 1000, "addOtherProduct": true, "directLoc": "홍대입구역 2번 출구"}',
     description: 'accesstoken refresh jwt 키',
   })
-  @Prop()
+  @Prop({ type: JSON })
   @IsJSON()
-  refreshToken: JSON;
+  deliveryMethod: JSON;
 
   @ApiProperty({
     example: '2022-4-13',
@@ -173,3 +172,5 @@ export class User {
   }
 
 }
+
+export const ProductSchema = SchemaFactory.createForClass(Product);
