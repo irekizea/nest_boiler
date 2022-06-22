@@ -29,7 +29,6 @@ export class Market {
   })
   @Prop({ 
     required: true, 
-    unique: true 
   })
   @IsNotEmpty()
   marketType: string;
@@ -38,7 +37,10 @@ export class Market {
     example: '스낵/음료/시럼 // 미국',
     description: '카테고리',
   })
-  @Prop()
+  @Prop({ 
+    required: true, 
+    unique: true 
+  })
   @IsNotEmpty()
   marketName: string;
 
@@ -46,10 +48,26 @@ export class Market {
     example: '["과자/스낵바", "초콜릿"] // 이미지주소.img',
     description: '해당 마켓 추가 정보, type 이 category 일 경우 세부 카테고리 리스트, 국가 일 경우 이미지 주소 추가 마켓 분류가 생길 경우 해당 분류에 추가 정보',
   })
-  @Prop()
+  @Prop({ required: true })
   @IsString()
   marketAdditionalInfo: string;
+
+
+  readonly readOnlyData:{
+    marketType: string;
+    marketName: string
+    marketAdditionalInfo: string;
+  }
+
 
 }
 
 export const MarketSchema = SchemaFactory.createForClass(Market);
+
+MarketSchema.virtual('readOnlyData').get(function (this: Market){
+  return {
+    marketType: this.marketType,
+    marketName: this.marketName,
+    marketAdditionalInfo: this.marketAdditionalInfo,
+  }
+})
