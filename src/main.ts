@@ -14,7 +14,7 @@ async function bootstrap() {
      * forbidNonwhitelisted: 정의 되지 않은값 error 발생
      */
     whitelist: true,
-    forbidNonWhitelisted: true,
+    // forbidNonWhitelisted: true,
     transform: true,
     disableErrorMessages: true,
   }))

@@ -3,7 +3,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginRequestDto } from './dto/loginrequest.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserBasicInfoDto } from 'src/user/dto/userBasicInfo.dto';
 
 @Injectable()
 export class AuthService {
@@ -65,6 +64,8 @@ export class AuthService {
         return refreshToken;
     }
 
-    
+    async removeRefreshToken(userEmail: string) {
+        await this.userRepository.removeRefreshToken(userEmail);
+    }
 
 }

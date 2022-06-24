@@ -59,5 +59,12 @@ export class UserRepository {
         await this.userModel.updateOne({userEmail}, {refreshToken: refreshToken});
     }
 
+    async deleteUser(userEmail: string) {
+        return await this.userModel.findOneAndDelete({userEmail: userEmail});
+    }
+
+    async removeRefreshToken(userEmail: string) {
+        await this.userModel.updateOne({userEmail}, {refreshToken: null});
+    }
 
 }

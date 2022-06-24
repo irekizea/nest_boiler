@@ -1,14 +1,14 @@
 import { UserService } from './../services/user.service';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
 import { UserEmailCheckDto } from '../dto/userEmailCheck.dto';
-import { Body, Controller, Post, Req, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards, UnauthorizedException, Put, Delete } from '@nestjs/common';
 import {
     ApiOkResponse,
     ApiOperation,
     ApiTags,
   } from '@nestjs/swagger';
-import { AuthService } from 'src/auth/auth.service';
-import { LoginRequestDto } from 'src/auth/dto/loginrequest.dto';
+import { AuthService } from '../../auth/auth.service';
+import { LoginRequestDto } from '../../auth/dto/loginrequest.dto';
 import { RegistSellerDto } from '../dto/registSeller.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
@@ -44,11 +44,9 @@ export class UserController {
 
     @ApiOperation({ summary : '셀러등록'})
     @UseGuards(AuthGuard('jwt'))
-    @Post('registSeller')
+    @Put('registSeller')
     async registSellergin(@Body() registSellerDto: RegistSellerDto, @Req() req: Request){
         // 인증 유저 이메일과 요청 이메일 일치 여부 확인
-        console.log('come check')
-        console.log(req.user + '   ' + registSellerDto.userEmail)
         if(req.user===registSellerDto.userEmail){
             return await this.userService.registSeller(registSellerDto);
         }else{
@@ -60,10 +58,11 @@ export class UserController {
     @UseGuards(AuthGuard('jwt'))
     @Post('getSellerInfo')
     async getSellerInfo(@Body() userEmailCheckDto: UserEmailCheckDto, @Req() req: Request){
-        if(req.user===userEmailCheckDto.userEmail){
-            return await this.userService.getSellerInfo(userEmailCheckDto.userEmail);
-        }else{
+        
+        if(req.user!=userEmailCheckDto.userEmail){
             throw new UnauthorizedException();
+        }else{
+            return await this.userService.getSellerInfo(userEmailCheckDto.userEmail);
         }
     }
     
@@ -77,8 +76,20 @@ export class UserController {
                };
             return await this.authService.setNewAccessToken(payload);
         }else{
+            //만료된 accesstoken 이 기존 accesstoken과  다를 경우 refreshtoken 탈취 가정 refreshtoken 삭제
+            await this.authService.removeRefreshToken(userInfo.userEmail);
             throw new UnauthorizedException();
         }
     }
 
+    @ApiOperation({ summary : '유저삭제'})
+    @UseGuards(AuthGuard('jwt'))
+    @Delete('deleteUser')
+    async deleteUser(@Body() userEmailCheckDto: UserEmailCheckDto, @Req() req: Request){
+        if(req.user!=userEmailCheckDto.userEmail){
+            return await this.userService.deleteUser(userEmailCheckDto.userEmail);
+        }else{
+            throw new UnauthorizedException();
+        }
+    }
 }

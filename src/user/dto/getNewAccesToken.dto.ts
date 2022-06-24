@@ -1,5 +1,5 @@
 import { PickType } from "@nestjs/swagger";
-import { User } from "src/user/schemas/user.schema";
+import { User } from "../schemas/user.schema";
 
 export class GetNewAccessToken extends PickType(User, [
     'userEmail',

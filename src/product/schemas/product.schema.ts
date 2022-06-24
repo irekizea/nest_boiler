@@ -1,11 +1,10 @@
-import { MongooseModule, Prop, Schema, SchemaFactory, SchemaOptions, } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions, } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { 
   IsEmail, 
   IsNotEmpty, 
   IsNumber, 
   IsString, 
-  IsJSON
 } from 'class-validator';
 import { Document, Types } from 'mongoose';
 
@@ -22,8 +21,9 @@ export class Product {
     example: 'jklsdlf23slsdf',
     description: '상품 고유 번호',
   })
+  @IsString()
   @Prop({default:Types.ObjectId})
-  _id: Types.ObjectId;
+  _id: string;
 
   @ApiProperty({
     example: 'sample@croket.com',
@@ -31,7 +31,6 @@ export class Product {
   })
   @Prop({ 
     required: true, 
-    unique: true 
   })
   @IsEmail()
   @IsNotEmpty()
@@ -47,7 +46,7 @@ export class Product {
   productName: string;
 
   @ApiProperty({
-    example: '[3123, 5235235, 1112312]',
+    example: '[3123.jpg, 5235235.jpg, 1112312.jpg]',
     description: '상품 썸네일 리스트',
     default: '[]',
   })
@@ -56,7 +55,7 @@ export class Product {
   thumbnailList: [];
 
   @ApiProperty({
-    example: '스낵/음료/시럼',
+    example: '스낵/음료/시럽 // 영국',
     description: '카테고리',
   })
   @Prop()
@@ -65,12 +64,20 @@ export class Product {
   category: string;
 
   @ApiProperty({
-    example: '과자/스낵바',
+    example: '과자/스낵바 // sdjklfslf.jpg',
     description: '세부 카테고리',
   })
   @Prop()
   @IsString()
   categoryDetail: string;
+
+  @ApiProperty({
+    example: '영국',
+    description: '국가 명',
+  })
+  @Prop()
+  @IsString()
+  country: string;
 
   @ApiProperty({
     example: 'singleOption // groupOption',
@@ -113,12 +120,12 @@ export class Product {
   productWarning: string;
 
   @ApiProperty({
-    example: '2022-4-13',
+    example: '1655944393631',
     description: '구매일',
   })
   @Prop()
-  @IsString()
-  purchasedDate: string;
+  @IsNumber()
+  purchasedDate: number;
 
   @ApiProperty({
     example: '상세정보.txt',
@@ -138,6 +145,14 @@ export class Product {
   purchasedLocation: string;
   
   @ApiProperty({
+    example: '서울, 한국',
+    description: '구매 지역',
+  })
+  @Prop({ default: 0 })
+  @IsNumber()
+  lastOrderDate: number;
+
+  @ApiProperty({
     example: '["inner", "direct"] // ["foreign"]',
     description: '배송 방법',
   })
@@ -147,29 +162,18 @@ export class Product {
 
   @ApiProperty({
     example: '{"deliveryOption":"택배 선불", "deliveryPrice": 1000, "addOtherProduct": true, "directLoc": "홍대입구역 2번 출구"}',
-    description: 'accesstoken refresh jwt 키',
+    description: '배송수단',
   })
   @Prop({ type: JSON })
-  @IsJSON()
   deliveryMethod: JSON;
 
   @ApiProperty({
-    example: '2022-4-13',
+    example: '1655944393631',
     description: '배송일',
   })
   @Prop()
-  @IsString()
-  deliveryDate: string;
-
-  readonly readOnlyData:{
-    userEmail: string;
-    name: string
-    coupone: string;
-    isSeller: boolean;
-    grade: string;
-    credit: number;
-    additionalCredit: number
-  }
+  @IsNumber()
+  deliveryDate: number;
 
 }
 

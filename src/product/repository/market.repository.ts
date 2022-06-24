@@ -2,8 +2,7 @@ import { InsertMarketDto } from './../dto/insertMarket.dto';
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Market } from "src/product/schemas/market.schema";
-import { distinct } from 'rxjs';
+import { Market } from "../schemas/market.schema";
 
 @Injectable()
 export class MarketRepository {
@@ -20,7 +19,6 @@ export class MarketRepository {
 
     async findDistinctMarketType() {
         const distinctMarketList = await this.marketModel.find().distinct('marketType').exec()
-        console.log(distinctMarketList);
         return distinctMarketList;
     }
 

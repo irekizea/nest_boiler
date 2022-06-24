@@ -1,10 +1,8 @@
-import { User } from 'src/user/schemas/user.schema';
 import { UserRepository } from './../repository/user.repository';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
 import * as bcrypt from 'bcrypt';
 import { RegistSellerDto } from '../dto/registSeller.dto';
-import { UserEmailCheckDto } from '../dto/userEmailCheck.dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +13,7 @@ export class UserService {
         const isEmailExist = await this.userRepository.existByEmail(userEmail);
 
         if(isEmailExist){
-            throw new UnauthorizedException('해당 이메일은 이미 사용중 입니다');
+            throw new BadRequestException('해당 이메일은 이미 사용중 입니다');
         }
         return "사용 가능한 이메일 입니다"
     }
@@ -57,6 +55,11 @@ export class UserService {
     async getSellerInfo(userEmail: string) {
         const sellerInfo = this.userRepository.getSellerInfoByEmail(userEmail);
         return sellerInfo 
+    }
+
+    //유저 삭제
+    async deleteUser(userEmail: string) {
+        return await this.userRepository.deleteUser(userEmail);
     }
 
 
