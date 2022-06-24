@@ -37,6 +37,16 @@ export class Product {
   userEmail: string;
 
   @ApiProperty({
+    example: '영쿡',
+    description: '셀러 이름',
+  })
+  @Prop({ 
+    required: true, 
+  })
+  @IsNotEmpty()
+  sellerName: string;
+
+  @ApiProperty({
     example: '제니쿠키',
     description: '상품 이름',
   }) 
@@ -175,6 +185,30 @@ export class Product {
   @IsNumber()
   deliveryDate: number;
 
+  readonly basicInfoData:{
+    _id: string;
+    thumbnailList: string;
+    sellerName: string;
+    productName: string;
+    country: boolean;
+    purchasedLocation: string;
+    deliveryType: string;
+    deliveryDate: string
+  }
+
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+ProductSchema.virtual('basicInfoData').get(function (this: Product){
+  return {
+    _id: this._id,
+    thumbnailList: this.thumbnailList,
+    sellerName: this.sellerName,
+    productName: this.productName,
+    country: this.country,
+    purchasedLocation: this.purchasedLocation,
+    deliveryType: this.deliveryType,
+    deliveryDate: this.deliveryDate
+  }
+})

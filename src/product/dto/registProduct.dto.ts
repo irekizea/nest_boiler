@@ -4,6 +4,7 @@ import { PickType } from "@nestjs/swagger";
 export class RegistProductDto extends PickType(Product, [
     'userEmail',
     'productName',
+    'sellerName',
     'thumbnailList',
     'category',
     'categoryDetail',

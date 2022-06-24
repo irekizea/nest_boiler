@@ -1,7 +1,7 @@
 import { UserService } from './../services/user.service';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
 import { UserEmailCheckDto } from '../dto/userEmailCheck.dto';
-import { Body, Controller, Post, Req, UseGuards, UnauthorizedException, Put, Delete } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards, UnauthorizedException, Put, Delete, Get } from '@nestjs/common';
 import {
     ApiOkResponse,
     ApiOperation,
@@ -24,7 +24,7 @@ export class UserController {
     ){}
     
     @ApiOperation({ summary : '이메일 중복 체크'})
-    @Post('emailCheck')
+    @Get('emailCheck')
     @ApiOkResponse({ status: 200, description: '사용가능한 이메일 입니다.'})
     async emailCheck(@Body() userEmailCheckDto: UserEmailCheckDto){
         return await this.userService.emailCheck(userEmailCheckDto.userEmail);
@@ -56,7 +56,7 @@ export class UserController {
 
     @ApiOperation({ summary : '셀러 정보 확인'})
     @UseGuards(AuthGuard('jwt'))
-    @Post('getSellerInfo')
+    @Get('getSellerInfo')
     async getSellerInfo(@Body() userEmailCheckDto: UserEmailCheckDto, @Req() req: Request){
         
         if(req.user!=userEmailCheckDto.userEmail){
@@ -68,7 +68,7 @@ export class UserController {
     
     @ApiOperation({ summary : 'accesstoken 갱신'})
     @UseGuards(AuthGuard('jwt-refresh'))
-    @Post('setNewAccessToken')
+    @Put('setNewAccessToken')
     async setNewAccessToken(@Body() userInfo: GetNewAccessToken, @Req() req: Request){
         if(req.user===userInfo.accessToken){
             const payload:JSON = <JSON><unknown>{

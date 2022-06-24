@@ -38,7 +38,7 @@ export class ProductService {
     }
     
     async registProduct(registProductDto: RegistProductDto) {
-        return await this.productRepository.registProduct(registProductDto);
+        return await (await this.productRepository.registProduct(registProductDto)).basicInfoData;
     }
 
     async getProductDetail(productId: string) {
