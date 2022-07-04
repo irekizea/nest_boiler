@@ -19,9 +19,9 @@ export class ProductRepository {
     }
 
     async updateProduct(updateProductDto: UpdateProductDto) {
-        const product = await this.productModel.findById(updateProductDto._id);
-        product.productName=updateProductDto.productName;
-        await this.productModel.updateOne({product})
+        // const product = await this.productModel.findById(updateProductDto._id);
+        // product.productName=updateProductDto.productName;
+        // await this.productModel.updateOne({product})
         await this.productModel.findOneAndUpdate({ _id: updateProductDto._id },{
             productName: updateProductDto.productName,
             thumbnailList: updateProductDto.thumbnailList,

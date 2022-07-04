@@ -2,11 +2,15 @@ framework : nestjs
 DB : mongodb(mongoose)
 
 validation module : ValidationPipe 사용하여 request 별 dto 분리 및 해당 dto 속성에 맞는 데이터만을 전달 받을 수 있도록 설계
+logger : winston 특정 주요 요청 사항 info 로 알림, 비정상적인 요청일 경우 error 로그 발생
 
-프로젝트 시작 명령어 : 일반 yarn start
-                        개발 모드 yarn run start:dev
+
+프로젝트 시작 명령어 :   일반 yarn start
+                        개발 yarn run start:dev
+                        테스트 yarn run test:e2e
 
 운영 파일 .env 
+
 
 1. 회원
 croket 기본 가입 정보 및 필요 정보 수집 하여 schema작성
@@ -37,15 +41,10 @@ useremail 중복 방지
 7. 상품 상세 조회
 1) 상품 id 바탕 세부 정보 조회 가능
 
-8. 미구현 부분
-1) guard 상품 미구현
-2) 상품 readonly data 미구현
-
-
-9. test case
-스웨거 바탕 테스트 가능
-http://[운영포트]:4001/docs/
-SWAGGER_USER = crocket
+8. test case
+swagger 바탕 테스트 가능
+http://[운영아이피]:4001/docs/
+SWAGGER_USER = croket
 SWAGGER_PASSWORD = cro_pwd
 
 swagger api 문서 바탕 execute 함으로서 테스트 가능

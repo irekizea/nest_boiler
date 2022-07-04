@@ -6,6 +6,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
+import {
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
+} from 'nest-winston';
+import * as winston from 'winston';
 import mongoose from 'mongoose';
 
 @Module({
@@ -13,18 +18,34 @@ import mongoose from 'mongoose';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UserModule,     
+    UserModule,
     MongooseModule.forRoot(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    // userCreateIndex: true,
-    // useFindAndModify: false,
-  }), AuthModule, ProductModule,],
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      // userCreateIndex: true,
+      // useFindAndModify: false,
+    }),
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.Console({
+          level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            nestWinstonModuleUtilities.format.nestLike('croket', {
+              prettyPrint: true,
+            }),
+          ),
+        }),
+      ],
+    }),
+    AuthModule,
+    ProductModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-   mongoose.set('debug', true)   
+    mongoose.set('debug', true);
   }
 }

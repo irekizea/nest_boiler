@@ -1,6 +1,5 @@
-import { PickType } from "@nestjs/swagger";
-import { User } from "../schemas/user.schema";
-
+import { PickType } from '@nestjs/swagger';
+import { User } from '../schemas/user.schema';
 
 export class UserSignUpRequestDto extends PickType(User, [
   'userEmail',
@@ -10,5 +9,5 @@ export class UserSignUpRequestDto extends PickType(User, [
   'socialType',
   'socialKey',
   'smsAllow',
-  'emailAllow'
+  'emailAllow',
 ] as const) {}

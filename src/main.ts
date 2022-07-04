@@ -6,37 +6,39 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   //벨리데이션 적용
-  app.useGlobalPipes(new ValidationPipe({
-    /**
-     * whitelist: dto 속성만 받기
-     * forbidNonwhitelisted: 정의 되지 않은값 error 발생
-     */
-    whitelist: true,
-    // forbidNonWhitelisted: true,
-    transform: true,
-    disableErrorMessages: true,
-  }))
+  app.useGlobalPipes(
+    new ValidationPipe({
+      /**
+       * whitelist: dto 속성만 받기
+       * forbidNonwhitelisted: 정의 되지 않은값 error 발생
+       */
+      whitelist: true,
+      // forbidNonWhitelisted: true,
+      transform: true,
+      disableErrorMessages: true,
+    }),
+  );
 
   //swagger 설정
   app.use(
     ['/docs', '/docs-json'],
     expressBasicAuth({
-        challenge: true,
-        users: {
-            [process.env.SWAGGER_USER]: process.env.SWAGGER_PASSWORD,
-        },
+      challenge: true,
+      users: {
+        [process.env.SWAGGER_USER]: process.env.SWAGGER_PASSWORD,
+      },
     }),
   );
 
   const config = new DocumentBuilder()
-  .setTitle('Croket API')
-  .setDescription('croket')
-  .setVersion('1.0.0')
-  .addTag('croket')
-  .build();
-  
+    .setTitle('Croket API')
+    .setDescription('croket')
+    .setVersion('1.0.0')
+    .addTag('croket')
+    .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 

@@ -1,5 +1,4 @@
 export type NewAccessTokenPayload = {
-    userEmail: string;
-    accessToken: string;
-  };
-  
+  userEmail: string;
+  accessToken: string;
+};
