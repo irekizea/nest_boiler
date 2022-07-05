@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common';
 import { UserRepository } from './../repository/user.repository';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
@@ -6,61 +7,59 @@ import { RegistSellerDto } from '../dto/registSeller.dto';
 
 @Injectable()
 export class UserService {
-    constructor(private readonly userRepository: UserRepository){}
+  constructor(private readonly userRepository: UserRepository) {}
 
-    // 이메일 중복 체크
-    async emailCheck(userEmail: string) {
-        const isEmailExist = await this.userRepository.existByEmail(userEmail);
+  // 이메일 중복 체크
+  async emailCheck(userEmail: string) {
+    const isEmailExist = await this.userRepository.existByEmail(userEmail);
 
-        if(isEmailExist){
-            throw new BadRequestException('해당 이메일은 이미 사용중 입니다');
-        }
-        return "사용 가능한 이메일 입니다"
+    if (isEmailExist) {
+      throw new HttpException('해당 이메일은 이미 사용중 입니다', 405);
     }
-    
-    // 회원가입
-    async signUp(body: UserSignUpRequestDto) {
-        const {
-             userEmail, 
-             password, 
-             name, 
-             countryCode, 
-             socialType, 
-             socialKey, 
-             smsAllow, 
-             emailAllow 
-            } = body;
+    return '사용 가능한 이메일 입니다';
+  }
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+  // 회원가입
+  async signUp(body: UserSignUpRequestDto) {
+    const {
+      userEmail,
+      password,
+      name,
+      countryCode,
+      socialType,
+      socialKey,
+      smsAllow,
+      emailAllow,
+    } = body;
 
-        const user = await this.userRepository.signUpUser({
-            userEmail,
-            password: hashedPassword,
-            name,
-            countryCode,
-            socialType,
-            socialKey,
-            smsAllow,
-            emailAllow
-        });
-        return user.readOnlyData;
-    }
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    //셀러 등록
-    async registSeller(registSellerDto: RegistSellerDto) {
-        await this.userRepository.registSeller(registSellerDto)
-    }
+    const user = await this.userRepository.signUpUser({
+      userEmail,
+      password: hashedPassword,
+      name,
+      countryCode,
+      socialType,
+      socialKey,
+      smsAllow,
+      emailAllow,
+    });
+    return user.readOnlyData;
+  }
 
-    //셀러 정보 확인
-    async getSellerInfo(userEmail: string) {
-        const sellerInfo = this.userRepository.getSellerInfoByEmail(userEmail);
-        return sellerInfo 
-    }
+  //셀러 등록
+  async registSeller(registSellerDto: RegistSellerDto) {
+    await this.userRepository.registSeller(registSellerDto);
+  }
 
-    //유저 삭제
-    async deleteUser(userEmail: string) {
-        return await this.userRepository.deleteUser(userEmail);
-    }
+  //셀러 정보 확인
+  async getSellerInfo(userEmail: string) {
+    const sellerInfo = this.userRepository.getSellerInfoByEmail(userEmail);
+    return sellerInfo;
+  }
 
-
+  //유저 삭제
+  async deleteUser(userEmail: string) {
+    return await this.userRepository.deleteUser(userEmail);
+  }
 }

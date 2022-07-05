@@ -1,3 +1,4 @@
+import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -20,6 +21,8 @@ async function bootstrap() {
       disableErrorMessages: true,
     }),
   );
+
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   //swagger 설정
   app.use(

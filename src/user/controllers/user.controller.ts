@@ -1,3 +1,5 @@
+import { SuccessInterceptor } from './../../common/interceptors/success.interceptor';
+import { HttpExceptionFilter } from '../../common/exceptions/http-exception.filter';
 import { UserService } from './../services/user.service';
 import { UserSignUpRequestDto } from '../dto/userSignUpRequest.dto';
 import { UserEmailCheckDto } from '../dto/userEmailCheck.dto';
@@ -12,6 +14,10 @@ import {
   Delete,
   Get,
   Inject,
+  UseFilters,
+  Param,
+  ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '../../auth/auth.service';
@@ -24,6 +30,8 @@ import { Logger as WinstonLogger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Controller('user')
+@UseFilters(HttpExceptionFilter)
+@UseInterceptors(SuccessInterceptor)
 @ApiTags('user')
 export class UserController {
   constructor(
@@ -31,6 +39,14 @@ export class UserController {
     private readonly userService: UserService,
     private readonly authService: AuthService,
   ) {}
+
+  // 인자 값 인트로 변환
+  @ApiOperation({ summary: '번호 체크' })
+  @Get('numTest/:id')
+  async numTest(@Param('id', ParseIntPipe) param: number) {
+    console.log(typeof param);
+    return 'asd';
+  }
 
   @ApiOperation({ summary: '이메일 중복 체크' })
   @Get('emailCheck')

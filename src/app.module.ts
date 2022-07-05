@@ -1,3 +1,4 @@
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -22,7 +23,6 @@ import mongoose from 'mongoose';
     MongooseModule.forRoot(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      // userCreateIndex: true,
       // useFindAndModify: false,
     }),
     WinstonModule.forRoot({
@@ -46,6 +46,7 @@ import mongoose from 'mongoose';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
     mongoose.set('debug', true);
   }
 }

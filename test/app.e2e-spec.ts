@@ -29,7 +29,7 @@ describe('AppController (e2e)', () => {
         .send({
           userEmail: 'test@test.com',
         });
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(405);
     });
   });
 
