@@ -22,6 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         success: false,
         timestamp: new Date().toISOString(),
         path: request.url,
+        status,
         error,
       });
       // 네스트 자체 에러 처리

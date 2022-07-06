@@ -36,10 +36,10 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Croket API')
-    .setDescription('croket')
+    .setTitle('Boilerplate')
+    .setDescription('sample')
     .setVersion('1.0.0')
-    .addTag('croket')
+    .addTag('boiler')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

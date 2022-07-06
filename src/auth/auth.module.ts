@@ -18,7 +18,6 @@ import { JwtRefreshStrategy } from './jwt/jwtRefresh.strategy';
     forwardRef(() => UserModule),
   ],
   providers: [AuthService, JwtStrategy, JwtRefreshStrategy],
-  exports: [AuthService]
-  
+  exports: [AuthService],
 })
 export class AuthModule {}

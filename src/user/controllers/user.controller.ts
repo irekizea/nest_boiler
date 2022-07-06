@@ -19,7 +19,12 @@ import {
   ParseIntPipe,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from '../../auth/auth.service';
 import { LoginRequestDto } from '../../auth/dto/loginrequest.dto';
 import { RegistSellerDto } from '../dto/registSeller.dto';
@@ -43,6 +48,14 @@ export class UserController {
   // 인자 값 인트로 변환
   @ApiOperation({ summary: '번호 체크' })
   @Get('numTest/:id')
+  @ApiResponse({
+    status: 200,
+    description: '정상 요청',
+  })
+  @ApiResponse({
+    status: 500,
+    description: '내부 오류',
+  })
   async numTest(@Param('id', ParseIntPipe) param: number) {
     console.log(typeof param);
     return 'asd';

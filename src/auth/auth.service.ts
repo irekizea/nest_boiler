@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common';
 import { UserRepository } from './../user/repository/user.repository';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginRequestDto } from './dto/loginrequest.dto';
@@ -15,7 +16,6 @@ export class AuthService {
     const { userEmail, password } = data;
 
     const user = await this.userRepository.findUserByEmail(userEmail);
-
     if (!user) {
       throw new UnauthorizedException('로그인 정보를 확인해 주세요');
     }
@@ -35,6 +35,7 @@ export class AuthService {
     const refreshToken = user.refreshToken
       ? user.refreshToken
       : await this.setNewRefreshToken(payload);
+
     return {
       userBasicInfo: user.basicInfoData,
       accessToken: await this.setNewAccessToken(payload),

@@ -1,38 +1,37 @@
-import { Prop, Schema, SchemaFactory, SchemaOptions, } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { 
-  IsEmail, 
-  IsNotEmpty, 
-  IsNumber, 
-  IsString, 
-  IsBoolean, 
-  IsArray
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsBoolean,
+  IsArray,
 } from 'class-validator';
 import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-const options: SchemaOptions =  {
+const options: SchemaOptions = {
   timestamps: true,
-}
+};
 
 @Schema(options)
-export class User {
-
+export class User extends Document {
   @ApiProperty({
     example: 'jklsdlf23slsdf',
     description: '유저 고유 번호',
   })
-  @Prop({default:Types.ObjectId})
+  @Prop({ default: Types.ObjectId })
   _id: Types.ObjectId;
 
   @ApiProperty({
     example: 'sample@croket.com',
     description: '유저 이메일',
   })
-  @Prop({ 
-    required: true, 
-    unique: true 
+  @Prop({
+    required: true,
+    unique: true,
   })
   @IsEmail()
   @IsNotEmpty()
@@ -50,7 +49,7 @@ export class User {
   @ApiProperty({
     example: '크로켓',
     description: '유저 이름',
-  }) 
+  })
   @Prop({ required: true })
   @IsString()
   @IsNotEmpty()
@@ -123,7 +122,7 @@ export class User {
     description: '회원 vip 등급',
     default: 'start',
   })
-  @Prop({ default: "start"})
+  @Prop({ default: 'start' })
   @IsString()
   grade: string;
 
@@ -175,12 +174,12 @@ export class User {
   })
   @IsBoolean()
   emailAllow: boolean;
-  
+
   @ApiProperty({
     example: '[12asdfas214, 324asetw45]',
     description: '찜 상품 id 리스트',
   })
-  @Prop({ default: []})
+  @Prop({ default: [] })
   @IsArray()
   likeList: [];
 
@@ -190,7 +189,7 @@ export class User {
   })
   @Prop()
   @IsString()
-  accessToken: string;  
+  accessToken: string;
 
   @ApiProperty({
     example: 'wejlksdlkjl2341sdf',
@@ -200,45 +199,44 @@ export class User {
   @IsString()
   refreshToken: string;
 
-  readonly readOnlyData:{
+  readonly readOnlyData: {
     userEmail: string;
-    name: string
+    name: string;
     coupone: string;
     isSeller: boolean;
     grade: string;
     credit: number;
-    additionalCredit: number
-  }
+    additionalCredit: number;
+  };
 
-  readonly basicInfoData:{
+  readonly basicInfoData: {
     userEmail: string;
-    name: string
+    name: string;
     coupone: string;
     isSeller: boolean;
     grade: string;
     credit: number;
-    additionalCredit: number
-  }
+    additionalCredit: number;
+  };
 
-  readonly sellerInfoData:{
+  readonly sellerInfoData: {
     sellerName: string;
     bank: string;
     accountNumber: string;
     anotherContactNum: string;
-  }
-
+  };
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.virtual('readOnlyData').get(function (this: User){
+UserSchema.virtual('readOnlyData').get(function (this: User) {
   return {
     userEmail: this.userEmail,
     name: this.name,
-  }
-})
+  };
+});
 
-UserSchema.virtual('basicInfoData').get(function (this: User){
+UserSchema.virtual('basicInfoData').get(function (this: User) {
   return {
     userEmail: this.userEmail,
     name: this.name,
@@ -246,15 +244,15 @@ UserSchema.virtual('basicInfoData').get(function (this: User){
     isSeller: this.isSeller,
     grade: this.grade,
     credit: this.credit,
-    additionalCredit: this.additionalCredit
-  }
-})
+    additionalCredit: this.additionalCredit,
+  };
+});
 
-UserSchema.virtual('sellerInfoData').get(function (this: User){
+UserSchema.virtual('sellerInfoData').get(function (this: User) {
   return {
     sellerName: this.sellerName,
     bank: this.bank,
     accountNumber: this.accountNumber,
     anotherContactNum: this.anotherContactNum,
-  }
-})
+  };
+});
